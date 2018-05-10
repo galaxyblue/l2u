@@ -71,14 +71,17 @@ def howResponse(howentry):
     if sympa1 == "good":
         engine.say("I'm glad you feel that way.")
     elif sympa1 == "bad":
-        engine.say("I'm sorry you feel that way.")
+        engine.say("I'm sorry you feel that way. I hope your day improves later.")
     else:
         engine.say("Ah, it's one of those days. I hope your day gets better.")
     
     engine.runAndWait()
 
 def conclusion1(event):
-    engine.say("I see. I feel pretty good myself. I get to talk to you today.")
+    if sympa == False:
+        engine.say("I see.")
+    engine.say("I feel pretty good myself. I get to talk to you today.")
+    engine.runAndWait()
     
     
 ''' creating GUI '''
@@ -87,7 +90,9 @@ topFrame.pack()
 bottomFrame = tkr.Frame(root)
 bottomFrame.pack(side="bottom")
 
-introlabel = tkr.Label(topFrame, text="Exchange 1", bg="black", fg="white", font=("", 16))
+titlelabel = tkr.Label(topFrame, text="L2U2 Wizard of Oz Command Controls", bg="black", fg="white", font=("", 20))
+
+introlabel = tkr.Label(bottomFrame, text="Exchange 1", bg="black", fg="white", font=("", 16))
 
 smalltalkintro =tkr.Button(bottomFrame, text="Small Talk + Intro", font=("", 14))
 smalltalkintro.bind("<Button-1>", smallTalkAndIntro)
@@ -103,11 +108,17 @@ if sympa == True:
 howareyou = tkr.Button(bottomFrame, text="How are you?", font=("", 14))
 howareyou.bind("<Button-1>", howAreYou)
 
-introlabel.grid(row=0)
-smalltalkintro.grid(row=1)
-howareyou.grid(row=2)
+conclu1 = tkr.Button(bottomFrame, text="End 1", font=("", 14))
+conclu1.bind("<Button-1>", conclusion1)
+
+# put buttons on grid
+titlelabel.grid(row=0)
+introlabel.grid(row=1)
+smalltalkintro.grid(row=2)
+howareyou.grid(row=3)
 if sympa == True:
-    howlabel.grid(row=3)
-    howentry.grid(row=3, column=1)
+    howlabel.grid(row=4)
+    howentry.grid(row=4, column=1)
+conclu1.grid(row=5)
 
 root.mainloop()
