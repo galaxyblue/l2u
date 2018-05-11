@@ -25,7 +25,7 @@ try:
 except(SyntaxError, IndexError):
     pass
 
-''' introduction and first dialogue '''
+''' functions for introduction and q1 '''
 
 # small talk about time and introduction
 def smallTalkAndIntro(event):
@@ -63,6 +63,7 @@ def howAreYou(event):
     engine.say("How have you been? Good? Bad? Between good and bad?")
     engine.runAndWait()
 
+# sympathetic phrasing 1
 def howResponse(howentry):
     sympa1 = howentry.widget.get()
 
@@ -77,14 +78,51 @@ def howResponse(howentry):
     
     engine.runAndWait()
 
+# exchange 1 end
 def conclusion1(event):
     if sympa == False:
         engine.say("I see.")
     engine.say("I feel pretty good myself. I get to talk to you today.")
     engine.runAndWait()
+  
+# exchange 1 GUI
+def exchange1():
     
+    introlabel = tkr.Label(bottomFrame, text="Exchange 1", bg="blue", fg="white", font=("", 16))
     
-''' creating GUI '''
+    smalltalkintro =tkr.Button(bottomFrame, text="Small Talk + Intro", font=("", 14))
+    smalltalkintro.bind("<Button-1>", smallTalkAndIntro)
+    
+    howareyou = tkr.Button(bottomFrame, text="How are you?", font=("", 14))
+    howareyou.bind("<Button-1>", howAreYou)
+    
+    if sympa == True:
+        howlabel = tkr.Label(bottomFrame, text="S1: Input good/bad/else", bg="gray", fg="white", font=("", 14))
+        howentry = tkr.Entry(bottomFrame)
+        howentry.bind("<Return>", howResponse)
+    
+    howareyou = tkr.Button(bottomFrame, text="How are you?", font=("", 14))
+    howareyou.bind("<Button-1>", howAreYou)
+    
+    conclu1 = tkr.Button(bottomFrame, text="End 1", font=("", 14))
+    conclu1.bind("<Button-1>", conclusion1)
+    
+    # put buttons on grid
+    titlelabel.grid(row=0)
+    introlabel.grid(row=1)
+    smalltalkintro.grid(row=2)
+    howareyou.grid(row=3)
+    if sympa == True:
+        howlabel.grid(row=4)
+        howentry.grid(row=5)
+    conclu1.grid(row=6)
+    
+def exchange2():
+    print("exchange 2")
+    
+
+    
+''' GUI set up '''
 topFrame = tkr.Frame(root)
 topFrame.pack()
 bottomFrame = tkr.Frame(root)
@@ -92,33 +130,8 @@ bottomFrame.pack(side="bottom")
 
 titlelabel = tkr.Label(topFrame, text="L2U2 Wizard of Oz Command Controls", bg="black", fg="white", font=("", 20))
 
-introlabel = tkr.Label(bottomFrame, text="Exchange 1", bg="black", fg="white", font=("", 16))
+exchange1()
+exchange2()
 
-smalltalkintro =tkr.Button(bottomFrame, text="Small Talk + Intro", font=("", 14))
-smalltalkintro.bind("<Button-1>", smallTalkAndIntro)
-
-howareyou = tkr.Button(bottomFrame, text="How are you?", font=("", 14))
-howareyou.bind("<Button-1>", howAreYou)
-
-if sympa == True:
-    howlabel = tkr.Label(bottomFrame, text="S1: Input good/bad/else", bg="gray", fg="white", font=("", 14))
-    howentry = tkr.Entry(bottomFrame)
-    howentry.bind("<Return>", howResponse)
-
-howareyou = tkr.Button(bottomFrame, text="How are you?", font=("", 14))
-howareyou.bind("<Button-1>", howAreYou)
-
-conclu1 = tkr.Button(bottomFrame, text="End 1", font=("", 14))
-conclu1.bind("<Button-1>", conclusion1)
-
-# put buttons on grid
-titlelabel.grid(row=0)
-introlabel.grid(row=1)
-smalltalkintro.grid(row=2)
-howareyou.grid(row=3)
-if sympa == True:
-    howlabel.grid(row=4)
-    howentry.grid(row=4, column=1)
-conclu1.grid(row=5)
 
 root.mainloop()
