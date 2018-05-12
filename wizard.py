@@ -298,15 +298,17 @@ def followUp(event):
         count = 0
     engine.runAndWait()
     if count == 0:
-        engine.say("Could you expand on that?")
+        engine.say("Please tell me more.")
     elif count == 1:
-        engine.say("I'd like to hear more?")
+        engine.say("That sounds interesting. I'd like to hear more.")
     elif count == 2:
         engine.say("And then?")
     elif count == 3:
-        engine.say("Please tell me more.")
+        engine.say("Could you expand on that?")
     elif count == 4:
-        engine.say("That's very interesting.")
+        engine.say("Fascinating. Tell me more?")
+        
+    engine.runAndWait()
         
     engine.runAndWait()
 
@@ -314,6 +316,19 @@ def randomDialogue(howentry):
     random = howentry.widget.get()
     engine.say(random)
     engine.runAndWait()
+    
+def letMeThink(event):
+    global count1
+    if count1 != 2:
+        count1 = count1 + 1
+    else:
+        count1 = 0
+    if count1 == 0:
+        engine.say("Let me think about that for a moment.")
+    elif count1 == 1:
+        engine.say("Let me see... Hold on a second.")
+    engine.runAndWait()
+    
     
 def wildCardButtons():
     wild = tkr.Label(bottomFrame, text="Wild Cards", bg="magenta", fg="white", font=("", 16))
@@ -323,22 +338,23 @@ def wildCardButtons():
     follow = tkr.Button(bottomFrame, text="Follow Up Quips", font=("", 14))
     emerlabel = tkr.Label(bottomFrame, text="For Random Speech-to-Text", bg="red", fg="white", font=("", 14))
     emerentry = tkr.Entry(bottomFrame)
+    think = tkr.Button(bottomFrame, text="Let Me Think", font=("", 14))
     
     thankyou.bind("<Button-1>", thankYou)
     idk.bind("<Button-1>", abort)
     yourewelcome.bind("<Button-1>", welcome)
     follow.bind("<Button-1>", followUp)
     emerentry.bind("<Return>", randomDialogue)
+    think.bind("<Button-1>", letMeThink)
     
     wild.grid(row=1, column=3)
     thankyou.grid(row=2, column=3)
     idk.grid(row=3, column=3)
     yourewelcome.grid(row=4, column=3)
     follow.grid(row=5, column=3)
-    emerlabel.grid(row=6, column=3)
-    emerentry.grid(row=7, column=3)
-
-
+    think.grid(row=6, column=3)
+    emerlabel.grid(row=7, column=3)
+    emerentry.grid(row=8, column=3)
     
 ''' GUI set up '''
 
