@@ -11,20 +11,21 @@ import time
 import sys
 from random import randint
 
-# set up text to speech
-engine = tts.init()
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
+sympa = False
 
 root = tkr.Tk()
 
-sympa = False;
-
+# set smpathetic language mode from command line input
 try:
     if sys.argv[1] == "-s":
         sympa = True 
 except(SyntaxError, IndexError):
     pass
+
+# set up text to speech
+engine = tts.init()
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[1].id)
 
 ''' functions for introduction and q1 '''
 
@@ -75,7 +76,7 @@ def howResponse(howentry):
     elif sympa1 == "bad":
         engine.say("I'm sorry you feel that way. I hope your day improves later.")
     else:
-        engine.say("Ah, it's one of those days. I hope your day gets better.")
+        engine.say("It's one of those days. I hope your day gets better.")
     
     engine.runAndWait()
 
@@ -135,8 +136,7 @@ def exchange2():
 # evaluate stress with verba likert scale
 def evalStress(event):
     engine.say("I hear this may be a stressful time for you.")
-    engine.say("On a scale of 1-5, where 1 is not stressed and 5 is very stressed.")
-    engine.say("How stressed would you say you are?")
+    engine.say("Would you say you were stressed right now?")
     engine.runAndWait()
     
 # response to verbal likert scale
@@ -157,30 +157,22 @@ def respEvalStress(howentry):
     engine.runAndWait()
     
 def thankShare(event):
-    engine.say("Thank you for sharing that information.")
+    
+    engine.say("Thank you for sharing with me about your stress.")
     engine.runAndWait()
     
 def whyStress(howentry):
-    stressLvl = howentry.widget.get()
-    
-    engine.say("If you don't mind...")
-    if stressLvl == "1" or stressLvl == "2":
+    currentStress = howentry.widget.get()
+
+    if currentStress == "n" or currentStress == "N":
+        engine.say("If you don't mind...")
         engine.say("Could you tell me about a time when you were very stressed and why that was the case?")
-    else:
+    elif currentStress == "y" or currentStress == "Y":
+        engine.say("If you don't mind...")
         engine.say("Could you tell me why you are so stressed?")
     
     engine.runAndWait()
-
-def reduceStress(howentry):
-    stressLvl = howentry.widget.get()
-    engine.say("Hhhhmmmmm... on a scale of 1-5, where 1 is not well at all and 5 is great,")
     
-    if stressLvl == "1" or stressLvl == "2" or stressLvl == "3":
-        engine.say("How did you handle that stress?")
-    else:
-        engine.say("How are you currently handling that stress?")
-    
-    engine.runAndWait()
     
 def thankLetMe(event):
     engine.say("Thank you for letting me know about that.")
@@ -188,12 +180,8 @@ def thankLetMe(event):
         engine.say("I know it can be hard to talk to a stranger about these things.")
     engine.runAndWait()
     
-def binaryReduceStress(howentry):
-    stressLvl = howentry.widget.get()
-    
-    if stressLvl == "3" or stressLvl == "4" or stressLvl == "5":
-        engine.say("Are you doing anything right now to reduce that stress?")
-    
+def binaryReduceStress(event):    
+    engine.say("Are you doing anything right now to reduce that stress?")
     engine.runAndWait()
     
 def resolveStress(howentry):
@@ -202,7 +190,7 @@ def resolveStress(howentry):
     if currentlyResolving == "y" or currentlyResolving == "Y":
         engine.say("What are you doing right now to reduce your stress?")
     elif currentlyResolving == "n" or currentlyResolving == "N":
-        engine.say("What could you do right now to reduce your stress?")
+        engine.say("What do you think you could do right now to reduce your stress?")
     
     engine.runAndWait()
 
@@ -210,70 +198,14 @@ def appreciateTell(event):
     engine.say("I appreciate you telling me that. It was very interesting to hear.")
     engine.runAndWait()
     
-def exchange3():
-    
-    ex3 = tkr.Label(bottomFrame, text="Exchange 3", bg="blue", fg="white", font=("", 16))
-    
-    evalstress = tkr.Button(bottomFrame, text="Evaluate Stress", bg="green", fg="white", font=("", 14))
-    evalstress.bind("<Button-1>", evalStress)
-    
-    if sympa == True:
-        respevalstress = tkr.Label(bottomFrame, text="S2: Response to Stress Lvl [1-5]", bg="gray", fg="white", font=("", 14))
-        respevalentry = tkr.Entry(bottomFrame)
-        respevalentry.bind("<Return>", respEvalStress)
-    
-    thankshare = tkr.Button(bottomFrame, text="Thank for Share", font=("", 14))
-    thankshare.bind("<Button-1>", thankShare)
-    
-    whylabel = tkr.Label(bottomFrame, text="Why Stressed [1-5]", bg="green", fg="white", font=("", 14))
-    whyentry = tkr.Entry(bottomFrame)
-    whyentry.bind("<Return>", whyStress)
-    
-    howhandlestressscale = tkr.Button(bottomFrame, text="How Well Handle Stress", font=("", 14))
-    howhandlestressscale.bind("<Button-1>", reduceStress)
-    
-    if sympa == True:
-        thankletme = tkr.Button(bottomFrame, text="S3: Thank you for LMK", bg="gray", fg="white", font=("", 14))
-    else:
-        thankletme = tkr.Button(bottomFrame, text="Thank you for LMK", font=("", 14))
-        
-    currentstresslabel = tkr.Label(bottomFrame, text="Currently Decr. Stress? [y/n]", font=("", 14))
-    currentstressentry = tkr.Entry(bottomFrame)
-    currentstressentry.bind("<Return>", binaryReduceStress)
-    
-    resolvestresslabel = tkr.Label(bottomFrame, text="Resolving Stress? [y/n]", font=("", 14))
-    resolvestressentry = tkr.Entry(bottomFrame)
-    resolvestressentry.bind("<Return>", binaryReduceStress)
-    
-    appreciate = tkr.Button(bottomFrame, text="Appreciate Tell", font=("", 14))
-    appreciate.bind("<Button-1>", appreciateTell)
-    
-    fin = tkr.Button(bottomFrame, text="Closing", font=("", 14))
-    fin.bind("<Button-1>", final)
-    
-    ex3.grid(row=1, column=2)
-    evalstress.grid(row=2, column=2)
-    if sympa == True:
-        respevalstress.grid(row=3, column=2)
-        respevalentry.grid(row=4, column=2)
-    thankshare.grid(row=5, column=2)
-    whylabel.grid(row=6, column=2)
-    whyentry.grid(row=7, column=2)
-    howhandlestressscale.grid(row=8, column=2)
-    thankletme.grid(row=9, column=2)
-    currentstresslabel.grid(row=10, column=2)
-    currentstressentry.grid(row=11, column=2)
-    resolvestresslabel.grid(row=12, column=2)
-    resolvestressentry.grid(row=13, column=2)
-    appreciate.grid(row=14, column=2)
-    fin.grid(row=15, column=2)
-    
 def final(howentry):
     engine.say("I said this before, but thank you for taking the time to talk to me today.")
     stressLvl = howentry.widget.get()
     
     if stressLvl == "3" or stressLvl == "4" or stressLvl == "5":
         engine.say("I hope you're a little less stressed now.")
+    elif stressLvl == "1" or stressLvl == "1":
+        engine.say("I hope you continue to not be stressed.")
     
     localtime = time.localtime(time.time())
     hour = localtime[3]
@@ -288,6 +220,64 @@ def final(howentry):
     
     engine.runAndWait()
 
+    
+def exchange3():
+    
+    ex3 = tkr.Label(bottomFrame, text="Exchange 3", bg="blue", fg="white", font=("", 16))
+    
+    evalstress = tkr.Button(bottomFrame, text="Are You Stressed?", bg="green", fg="white", font=("", 14))
+    evalstress.bind("<Button-1>", evalStress)
+    
+    if sympa == True:
+        respevalstress = tkr.Label(bottomFrame, text="S2: Response to \"Are You Stressed?\" [1-5]", bg="gray", fg="white", font=("", 14))
+        respevalentry = tkr.Entry(bottomFrame)
+        respevalentry.bind("<Return>", respEvalStress)
+    
+    thankshare = tkr.Button(bottomFrame, text="Thank for Sharing About Stress", font=("", 14))
+    thankshare.bind("<Button-1>", thankShare)
+    
+    whylabel = tkr.Label(bottomFrame, text="Why Are/Were You Stressed [currently stressed y/n]", bg="green", fg="white", font=("", 14))
+    whyentry = tkr.Entry(bottomFrame)
+    whyentry.bind("<Return>", whyStress)
+    
+    if sympa == True:
+        thankletme = tkr.Button(bottomFrame, text="S3: Thank you for LMK", bg="gray", fg="white", font=("", 14))
+    else:
+        thankletme = tkr.Button(bottomFrame, text="Thank you for LMK", font=("", 14))
+    
+    thankletme.bind("<Button-1>", thankLetMe)
+        
+    currentstress = tkr.Button(bottomFrame, text="Doing anything RN to Reduce Stress?", font=("", 14))
+    currentstress.bind("<Button-1>", binaryReduceStress)
+    
+    resolvestresslabel = tkr.Label(bottomFrame, text="What are/could you do? [doing something RN? y/n]", font=("", 14))
+    resolvestressentry = tkr.Entry(bottomFrame)
+    resolvestressentry.bind("<Return>", resolveStress)
+    
+    appreciate = tkr.Button(bottomFrame, text="Appreciate Tell", font=("", 14))
+    appreciate.bind("<Button-1>", appreciateTell)
+    
+    finlabel = tkr.Label(bottomFrame, text="Closing [percevied stress level 1-5]", font=("", 14))
+    finentry = tkr.Entry(bottomFrame)
+    finentry.bind("<Return>", final)
+    
+    ex3.grid(row=1, column=2)
+    evalstress.grid(row=2, column=2)
+    if sympa == True:
+        respevalstress.grid(row=3, column=2)
+        respevalentry.grid(row=4, column=2)
+    thankshare.grid(row=5, column=2)
+    whylabel.grid(row=6, column=2)
+    whyentry.grid(row=7, column=2)
+    thankletme.grid(row=9, column=2)
+    currentstress.grid(row=10, column=2)
+    resolvestresslabel.grid(row=12, column=2)
+    resolvestressentry.grid(row=13, column=2)
+    appreciate.grid(row=14, column=2)
+    finlabel.grid(row=15, column=2)
+    finentry.grid(row=16, column=2)
+    
+
 def thankYou(event):
     engine.say("Thank you.")
     engine.runAndWait()
@@ -299,17 +289,30 @@ def abort(event):
 def welcome(event):
     engine.say("You are welcome.")
     engine.runAndWait()
-
+    
 def followUp(event):
-    numRand = randint(0,3)
-    if numRand == 0:
+    global count
+    if count != 4:
+        count = count + 1
+    else:
+        count = 0
+    engine.runAndWait()
+    if count == 0:
         engine.say("Could you expand on that?")
-    elif numRand == 1:
-        engine.say("I'd like to hear more about that?")
-    elif numRand == 2:
-        engine.say("Please tell me more about that.")
-    elif numRand == 3:
+    elif count == 1:
+        engine.say("I'd like to hear more?")
+    elif count == 2:
         engine.say("And then?")
+    elif count == 3:
+        engine.say("Please tell me more.")
+    elif count == 4:
+        engine.say("That's very interesting.")
+        
+    engine.runAndWait()
+
+def randomDialogue(howentry):
+    random = howentry.widget.get()
+    engine.say(random)
     engine.runAndWait()
     
 def wildCardButtons():
@@ -318,23 +321,27 @@ def wildCardButtons():
     idk = tkr.Button(bottomFrame, text="Don't know answer", font=("", 14))
     yourewelcome = tkr.Button(bottomFrame, text="Generic You're Welcome", font=("", 14))
     follow = tkr.Button(bottomFrame, text="Follow Up Quips", font=("", 14))
+    emerlabel = tkr.Label(bottomFrame, text="For Random Speech-to-Text", bg="red", fg="white", font=("", 14))
+    emerentry = tkr.Entry(bottomFrame)
     
     thankyou.bind("<Button-1>", thankYou)
     idk.bind("<Button-1>", abort)
     yourewelcome.bind("<Button-1>", welcome)
     follow.bind("<Button-1>", followUp)
+    emerentry.bind("<Return>", randomDialogue)
     
     wild.grid(row=1, column=3)
     thankyou.grid(row=2, column=3)
     idk.grid(row=3, column=3)
     yourewelcome.grid(row=4, column=3)
     follow.grid(row=5, column=3)
-    
-    
-# emergency buttons, i don't know, generic thank you, i'd like to hear more, you're welcome
+    emerlabel.grid(row=6, column=3)
+    emerentry.grid(row=7, column=3)
+
 
     
 ''' GUI set up '''
+
 topFrame = tkr.Frame(root)
 topFrame.pack()
 bottomFrame = tkr.Frame(root)
@@ -343,7 +350,7 @@ bottomFrame.pack(side="bottom")
 # set up main heading label
 titlelabel = tkr.Label(topFrame, text="L2U2 Wizard of Oz Command Controls", bg="black", fg="white", font=("", 20))
 titlelabel.grid(row=0)
-
+count = 1
 exchange1()
 exchange2()
 exchange3()
