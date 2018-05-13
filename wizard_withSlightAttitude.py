@@ -5,10 +5,14 @@ Created on Thu May 10 15:27:24 2018
 @author: Annie
 """
 
+''' STILL NEED TO HAVE UPDATED COMMENTS/MORE COMMENDS '''
+''' STILL NEEDS SOME CLEANING UP '''
+
 import tkinter as tkr
 import pyttsx3 as tts
 import time
 import sys
+from playsound import playsound
 
 sympa = False
 
@@ -74,12 +78,12 @@ def howResponse(howentry):
     engine.say("I see.") 
 
     if sympa1 == "good":
-        engine.say("I'm glad you feel that way. I love days that are going well.")
+        engine.say("I'm glad you feel that way. I love days that are going well, such as today.")
     elif sympa1 == "bad":
-        engine.say("I'm sorry you feel that way. I hope your day improves later.")
+        engine.say("I'm sorry you feel that way. I hope your day improves later on.")
         #engine.say("I could give you a cupcake, but it would be made of ones and zeros, which you unfortunately cannot eat.")
     else:
-        engine.say("It's one of those days. I hope your day gets better.")
+        engine.say("It's one of those days. Even though it's not going terribly, I hope your day gets better.")
     
     engine.runAndWait()
 
@@ -141,7 +145,7 @@ def exchange2():
 # evaluate stress with verba likert scale
 def evalStress(event):
     engine.say("I hear this may be a stressful time for you.")
-    engine.say("Would you say you were stressed right now?")
+    engine.say("Would you say you are stressed right now?")
     engine.runAndWait()
     
 # response to verbal likert scale
@@ -376,7 +380,5 @@ exchange1()
 exchange2()
 exchange3()
 wildCardButtons()
-
-''' don't forget tell me more questions '''
 
 root.mainloop()
